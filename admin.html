@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+    }
+    input, label {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    input[type="checkbox"], input[type="radio"] {
+      width: auto;
+      margin-right: 10px;
+    }
+    .status-group, .access-group {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+    }
+    .access-group label {
+      margin-right: 20px;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      background: #007bff;
+      color: white;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #result {
+      margin-top: 15px;
+      text-align: center;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Add New User</h2>
+    <input id="username" placeholder="Username" />
+    <input id="password" type="password" placeholder="Password" />
+    <div class="status-group">
+      <input type="checkbox" id="statusCheckbox" />
+      <label for="statusCheckbox">Mark as Active</label>
+    </div>
+    <input id="validity" type="datetime-local" />
+    <div class="access-group">
+      <label><input type="radio" name="access" value="1" checked /> 1 Device</label>
+      <label><input type="radio" name="access" value="∞" /> ∞ Devices</label>
+    </div>
+    <button onclick="addUser()">Add User</button>
+    <p id="result"></p>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

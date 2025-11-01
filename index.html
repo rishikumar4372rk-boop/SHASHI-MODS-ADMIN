@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --primary-color: #1976d2;
+      --text-color: #333;
+      --hover-bg: #f0f0f0;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      color: var(--text-color);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--bg-color);
+      padding: 16px 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1001;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .hamburger {
+      font-size: 24px;
+      cursor: pointer;
+      margin-right: 16px;
+      user-select: none;
+    }
+
+    .header-text {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .drawer {
+      width: 240px;
+      background-color: var(--bg-color);
+      height: 100vh;
+      position: fixed;
+      top: 64px;
+      left: -240px;
+      transition: left 0.3s ease;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
+    }
+
+    .drawer.open {
+      left: 0;
+    }
+
+    .drawer a {
+      display: block;
+      padding: 16px 24px;
+      text-decoration: none;
+      color: var(--text-color);
+      transition: background 0.2s ease;
+    }
+
+    .drawer a:hover {
+      background-color: var(--hover-bg);
+    }
+
+    .content {
+      padding: 96px 24px 24px 24px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .content.drawer-open {
+      margin-left: 240px;
+    }
+
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .stat-card h3 {
+      margin-top: 0;
+      color: #555;
+    }
+
+    .stat-card p {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      .content.drawer-open {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="hamburger" onclick="toggleDrawer()">&#9776;</div>
+      <div class="header-text">Admin Dashboard</div>
+    </div>
+  </div>
+
+  <!-- Drawer -->
+  <div id="drawer" class="drawer">
+    <a href="admin.html">Add User</a>
+    <a href="dashboard.html">Manage Users</a>
+  </div>
+
+  <!-- Main Content -->
+  <div id="content" class="content">
+    <h2>Dashboard Overview</h2>
+    
+    <div class="dashboard-stats">
+      <div class="stat-card">
+        <h3>Total Users</h3>
+        <p id="totalUsers">Loading...</p>
+      </div>
+      <div class="stat-card">
+        <h3>Active Users</h3>
+        <p id="activeUsers">Loading...</p>
+      </div>
+      <div class="stat-card">
+        <h3>Inactive Users</h3>
+        <p id="inactiveUsers">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPWXKHHVfevnhu3vX354XXE8dDv-30SQY",
+      authDomain: "injector-admin-cec7d.firebaseapp.com",
+      databaseURL: "https://injector-admin-cec7d-default-rtdb.firebaseio.com",
+      projectId: "injector-admin-cec7d",
+      storageBucket: "injector-admin-cec7d.appspot.com",
+      messagingSenderId: "588477478003",
+      appId: "1:588477478003:web:44ac4d206f4bc32af06606",
+      measurementId: "G-X9H0L872LW"
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
+  
+    function loadUserStats() {
+      const usersRef = ref(db, `userdata/`);
+      onValue(usersRef, (snapshot) => {
+        const data = snapshot.val();
+        let total = 0;
+        let active = 0;
+        let inactive = 0;
+  
+        if (data) {
+          Object.values(data).forEach(user => {
+            total++;
+            if (user.status === 'active') {
+              active++;
+            } else {
+              inactive++;
+            }
+          });
+        }
+  
+        document.getElementById('totalUsers').textContent = total;
+        document.getElementById('activeUsers').textContent = active;
+        document.getElementById('inactiveUsers').textContent = inactive;
+      });
+    }
+  
+    // Load stats immediately
+    loadUserStats();
+  
+    window.toggleDrawer = function() {
+      const drawer = document.getElementById("drawer");
+      const content = document.getElementById("content");
+      drawer.classList.toggle("open");
+      content.classList.toggle("drawer-open");
+    }
+  </script>  
+</body>
+</html>

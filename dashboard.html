@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Management Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f4f6f9;
+      color: #333;
+    }
+    
+    /* Header Styles */
+    header {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      padding: 15px 30px;
+      color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .header-title i {
+      font-size: 1.3rem;
+    }
+    
+    .back-link {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 15px;
+      border-radius: 6px;
+      transition: background-color 0.2s;
+    }
+    
+    .back-link:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .header-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    /* Search Section */
+    .search-section {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      margin: 25px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      max-width: 1200px;
+    }
+    
+    .search-bar-container {
+      position: relative;
+      flex-grow: 1;
+      max-width: 500px;
+    }
+    
+    .search-bar-container i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+    }
+    
+    .search-bar-container input {
+      width: 100%;
+      padding: 12px 20px 12px 45px;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      font-size: 1rem;
+      transition: all 0.3s;
+      background-color: #f8f9fa;
+    }
+    
+    .search-bar-container input:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+      background-color: white;
+    }
+    
+    .stats-card {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      padding: 15px;
+      border-radius: 8px;
+      min-width: 150px;
+      text-align: center;
+      border-left: 4px solid #007bff;
+    }
+    
+    .stats-card h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #495057;
+    }
+    
+    .stats-card p {
+      margin: 5px 0 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #007bff;
+    }
+    
+    /* Main Content */
+    .container {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* User Cards */
+    .user-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .user-card h3 {
+      margin-top: 0;
+      color: #333;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .user-card h3 span {
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: normal;
+    }
+    
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 500;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-right: 10px;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: #28a745;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #218838;
+      transform: translateY(-1px);
+    }
+    
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #c82333;
+      transform: translateY(-1px);
+    }
+    
+    .password-container {
+      position: relative;
+    }
+    
+    .password-container input {
+      padding-right: 40px;
+    }
+    
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      cursor: pointer;
+      color: #666;
+      background: none;
+      border: none;
+      font-size: 16px;
+      padding: 0;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .search-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-bar-container {
+        max-width: 100%;
+      }
+      
+      .stats-card {
+        width: 100%;
+      }
+      
+      .header-title {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="header-title">
+      <i class="fas fa-users-cog"></i>
+      <span>User Management Dashboard</span>
+    </div>
+    <a href="admin.html" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      <span>Back to Admin</span>
+    </a>
+  </div>
+</header>
+
+<div class="container">
+  <div class="search-section">
+    <div class="search-bar-container">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search users..." oninput="filterUsers()">
+    </div>
+    <div class="stats-card">
+      <h3>Total Users</h3>
+      <p id="totalUsers">0</p>
+    </div>
+  </div>
+
+  <div id="userList">Loading users...</div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getDatabase, ref, get, update, remove } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBPWXKHHVfevnhu3vX354XXE8dDv-30SQY",
+    authDomain: "injector-admin-cec7d.firebaseapp.com",
+    databaseURL: "https://injector-admin-cec7d-default-rtdb.firebaseio.com",
+    projectId: "injector-admin-cec7d",
+    storageBucket: "injector-admin-cec7d.appspot.com",
+    messagingSenderId: "588477478003",
+    appId: "1:588477478003:web:44ac4d206f4bc32af06606",
+    measurementId: "G-X9H0L872LW"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const userListEl = document.getElementById("userList");
+  let allUsers = {};
+
+  const usersRef = ref(db, "userdata");
+  get(usersRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      allUsers = snapshot.val();
+      renderUsers(allUsers);
+      // Update total users count
+      document.getElementById('totalUsers').textContent = Object.keys(allUsers).length;
+    } else {
+      userListEl.innerHTML = "<div class='no-users'>No users found.</div>";
+    }
+  }).catch((error) => {
+    userListEl.innerHTML = "<div class='error'>Error loading users: " + error.message + "</div>";
+  });
+
+  function renderUsers(users) {
+    userListEl.innerHTML = "";
+    Object.entries(users).forEach(([username, user]) => {
+      const userCard = document.createElement("div");
+      userCard.className = "user-card";
+      userCard.innerHTML = `
+        <h3>${username} <span>Registered: ${user.rgtime || 'N/A'}</span></h3>
+        <label>Username</label>
+        <input type="text" value="${username}" disabled>
+        <label>Password</label>
+        <div class="password-container">
+          <input type="password" id="password-${username}" value="${user.password || ''}">
+          <button class="toggle-password" onclick="togglePasswordVisibility('password-${username}', this)">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <label>Status</label>
+        <select id="status-${username}">
+          <option value="active" ${user.status === 'active' ? 'selected' : ''}>Active</option>
+          <option value="inactive" ${user.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+        </select>
+        <label>Valid Until</label>
+        <input type="text" id="validity-${username}" value="${user.validity || ''}">
+        <label>Access</label>
+        <select id="access-${username}">
+          <option value="1" ${user.access === '1' ? 'selected' : ''}>1 Device</option>
+          <option value="∞" ${user.access === '∞' ? 'selected' : ''}>∞ Devices</option>
+        </select>
+        <button class="btn-primary" onclick="updateUser('${username}')">Update</button>
+        <button class="btn-danger" onclick="deleteUser('${username}')">Delete</button>
+      `;
+      userListEl.appendChild(userCard);
+    });
+  }
+
+  window.togglePasswordVisibility = function(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector("i");
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.remove("fa-eye-slash");
+      icon.classList.add("fa-eye");
+    }
+  };
+
+  window.updateUser = function(username) {
+    const password = document.getElementById(`password-${username}`).value;
+    const status = document.getElementById(`status-${username}`).value;
+    const validity = document.getElementById(`validity-${username}`).value;
+    const access = document.getElementById(`access-${username}`).value;
+
+    update(ref(db, `userdata/${username}`), {
+      password,
+      status,
+      validity,
+      access
+    }).then(() => {
+      alert(`User ${username} updated successfully!`);
+    }).catch((error) => {
+      alert("Error updating user: " + error.message);
+    });
+  };
+
+  window.deleteUser = function(username) {
+    if (confirm(`Are you sure you want to delete ${username}?`)) {
+      remove(ref(db, `userdata/${username}`)).then(() => {
+        alert(`User ${username} deleted successfully!`);
+        delete allUsers[username];
+        renderUsers(allUsers);
+        document.getElementById('totalUsers').textContent = Object.keys(allUsers).length;
+      }).catch((error) => {
+        alert("Error deleting user: " + error.message);
+      });
+    }
+  };
+
+  window.filterUsers = function() {
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = {};
+    for (let key in allUsers) {
+      if (key.toLowerCase().includes(search)) {
+        filtered[key] = allUsers[key];
+      }
+    }
+    renderUsers(filtered);
+    document.getElementById('totalUsers').textContent = Object.keys(filtered).length;
+  };
+</script>
+
+</body>
+</html>
